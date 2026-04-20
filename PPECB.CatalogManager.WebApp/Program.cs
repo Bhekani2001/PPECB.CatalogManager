@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PPECB.CatalogManager.Core.Data;
+using PPECB.CatalogManager.Core.Entities;
 using PPECB.CatalogManager.IBusinessLogic;
 using PPECB.CatalogManager.IRepositories;
 using PPECB.CatalogManager.Repositories;
 using PPECB.CatalogManager.BusinessLogic;
+using System.Security.Cryptography;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Configure Entity Framework with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -19,7 +20,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
-// Register Repositories
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -35,7 +35,6 @@ builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 builder.Services.AddScoped<IPurchaseOrderItemRepository, PurchaseOrderItemRepository>();
 builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
-// Register Business Logic
 builder.Services.AddScoped<ICategoryBusinessLogic, CategoryBusinessLogic>();
 builder.Services.AddScoped<IProductBusinessLogic, ProductBusinessLogic>();
 builder.Services.AddScoped<IUserBusinessLogic, UserBusinessLogic>();
@@ -46,10 +45,8 @@ builder.Services.AddScoped<IWarehouseBusinessLogic, WarehouseBusinessLogic>();
 builder.Services.AddScoped<IInventoryTransactionBusinessLogic, InventoryTransactionBusinessLogic>();
 builder.Services.AddScoped<IProductImageBusinessLogic, ProductImageBusinessLogic>();
 
-// Register AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// ===== ADD AUTHENTICATION =====
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -64,13 +61,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Name = "PPECB.Auth";
     });
 
-// Add Authorization
 builder.Services.AddAuthorization();
 
-// Add HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
-// Add Session
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -80,7 +74,6 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -91,7 +84,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// ===== IMPORTANT: Add Authentication & Authorization middleware in correct order =====
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
@@ -102,4 +94,67 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    await dbContext.Database.EnsureCreatedAsync();
+
+    if (!dbContext.Users.Any(u => u.Email == "admin@ppecb.com"))
+    {
+        var salt = GenerateSalt();
+        var passwordHash = HashPassword("Admin@123", salt);
+
+        var adminUser = new User
+        {
+            Email = "admin@ppecb.com",
+            Username = "admin",
+            FirstName = "System",
+            LastName = "Administrator",
+            PasswordHash = passwordHash,
+            Salt = salt,
+            IsActive = true,
+            IsEmailConfirmed = true,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = "System"
+        };
+
+        await dbContext.Users.AddAsync(adminUser);
+        await dbContext.SaveChangesAsync();
+
+        var adminRole = await dbContext.Roles.FirstOrDefaultAsync(r => r.Name == "Admin");
+        if (adminRole != null)
+        {
+            var userRole = new UserRole
+            {
+                UserId = adminUser.Id,
+                RoleId = adminRole.Id,
+                AssignedDate = DateTime.UtcNow,
+                AssignedBy = "System"
+            };
+            await dbContext.UserRoles.AddAsync(userRole);
+            await dbContext.SaveChangesAsync();
+        }
+
+        Console.WriteLine("Default admin user created: admin@ppecb.com / Admin@123");
+    }
+}
+
 app.Run();
+static string GenerateSalt()
+{
+    byte[] saltBytes = new byte[32];
+    using (var rng = RandomNumberGenerator.Create())
+    {
+        rng.GetBytes(saltBytes);
+    }
+    return Convert.ToBase64String(saltBytes);
+}
+
+static string HashPassword(string password, string salt)
+{
+    using var sha256 = SHA256.Create();
+    var combined = Encoding.UTF8.GetBytes(password + salt);
+    var hash = sha256.ComputeHash(combined);
+    return Convert.ToBase64String(hash);
+}
