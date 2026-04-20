@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Transfer Stock";
+    var products = ViewBag.Products as IEnumerable<PPECB.CatalogManager.Core.DTOs.ProductDto>;
+    var warehouses = ViewBag.Warehouses as IEnumerable<PPECB.CatalogManager.Core.DTOs.WarehouseDto>;
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Transfer Stock</h2>
+                    <p class="text-muted mt-1">Move stock between warehouses</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Transactions
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="bi bi-arrow-left-right"></i> Transfer Stock</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProcessTransferStock" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Product *</label>
+                            <select name="productId" id="productId" class="form-select" required>
+                                <option value="">-- Select Product --</option>
+                                @if (products != null)
+                                {
+                                    foreach (var product in products)
+                                    {
+                                        <option value="@product.Id">@product.Code - @product.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Quantity to Transfer *</label>
+                            <input type="number" name="quantity" class="form-control" min="1" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">From Warehouse *</label>
+                            <select name="fromWarehouseId" class="form-select" required>
+                                <option value="">-- Select Source Warehouse --</option>
+                                @if (warehouses != null)
+                                {
+                                    foreach (var warehouse in warehouses)
+                                    {
+                                        <option value="@warehouse.Id">@warehouse.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">To Warehouse *</label>
+                            <select name="toWarehouseId" class="form-select" required>
+                                <option value="">-- Select Destination Warehouse --</option>
+                                @if (warehouses != null)
+                                {
+                                    foreach (var warehouse in warehouses)
+                                    {
+                                        <option value="@warehouse.Id">@warehouse.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reference Number</label>
+                            <input type="text" name="referenceNumber" class="form-control" placeholder="Transfer Order Number" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Notes</label>
+                            <textarea name="notes" class="form-control" rows="3" placeholder="Reason for transfer..."></textarea>
+                        </div>
+
+                        <hr />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-info">
+                                <i class="bi bi-check-circle"></i> Transfer Stock
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

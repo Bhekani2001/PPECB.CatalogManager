@@ -1,0 +1,112 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.SupplierDto
+
+@{
+    ViewData["Title"] = "Supplier Details";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Supplier Details</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Suppliers
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="bi bi-truck"></i> @Model.Name</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Code:</dt>
+                                <dd class="col-sm-7">@Model.Code</dd>
+
+                                <dt class="col-sm-5">Name:</dt>
+                                <dd class="col-sm-7">@Model.Name</dd>
+
+                                <dt class="col-sm-5">Contact Person:</dt>
+                                <dd class="col-sm-7">@(Model.ContactPerson ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Email:</dt>
+                                <dd class="col-sm-7">
+                                    @if (!string.IsNullOrEmpty(Model.Email))
+                                    {
+                                        <a href="mailto:@Model.Email">@Model.Email</a>
+                                    }
+                                    else
+                                    {
+                                        <span>N/A</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Phone:</dt>
+                                <dd class="col-sm-7">@(Model.Phone ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Tax Number:</dt>
+                                <dd class="col-sm-7">@(Model.TaxNumber ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Status:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5">Products:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-primary">@Model.ProductCount products</span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="mb-3">
+                        <h6>Address</h6>
+                        <p class="text-muted">@(Model.Address ?? "No address provided")</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">Created: @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm") by @Model.CreatedBy</small>
+                        </div>
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <div class="col-md-6 text-end">
+                                <small class="text-muted">Last updated: @Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm") by @Model.UpdatedBy</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="ShowEditSupplierForm" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a asp-action="ConfirmDeleteSupplier" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

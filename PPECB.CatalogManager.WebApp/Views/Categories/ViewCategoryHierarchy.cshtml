@@ -1,0 +1,288 @@
+﻿@model IEnumerable<PPECB.CatalogManager.Core.DTOs.CategoryDto>
+
+@{
+    ViewData["Title"] = "Category Hierarchy";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Category Hierarchy</h2>
+                    <p class="text-muted mt-1">Visual representation of your category structure</p>
+                </div>
+                <div>
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-list"></i> List View
+                    </a>
+                    <a asp-action="ShowCreateCategoryForm" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add Category
+                    </a>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    @if (Model.Any())
+                    {
+                        <div class="category-tree">
+                            @{
+                                var rootCategories = Model.Where(c => c.ParentCategoryId == null || c.ParentCategoryId == 0);
+                                foreach (var category in rootCategories)
+                                {
+                                    <div class="category-node mb-2">
+                                        <div class="category-item d-flex justify-content-between align-items-center p-3 bg-light rounded-3 shadow-sm">
+                                            <div class="d-flex align-items-center">
+                                                <div class="category-icon me-3">
+                                                    <i class="bi bi-folder-fill text-primary" style="font-size: 1.5rem;"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <h5 class="mb-0">@category.Name</h5>
+                                                        <span class="badge bg-secondary">@category.Code</span>
+                                                        @if (category.IsActive)
+                                                        {
+                                                            <span class="badge bg-success">Active</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-danger">Inactive</span>
+                                                        }
+                                                        @if (category.IsFeatured)
+                                                        {
+                                                            <span class="badge bg-warning">Featured</span>
+                                                        }
+                                                    </div>
+                                                    <div class="text-muted small mt-1">
+                                                        <i class="bi bi-files"></i> Products: @category.ProductCount
+                                                        @if (!string.IsNullOrEmpty(category.Description))
+                                                        {
+                                                            <i class="bi bi-file-text ms-3"></i> 
+                                                            @category.Description
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="category-actions">
+                                                <a asp-action="GetCategoryDetails" asp-route-id="@category.Id" class="btn btn-sm btn-outline-info me-1" title="View Details">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-action="ShowEditCategoryForm" asp-route-id="@category.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a asp-action="ConfirmDeleteCategory" asp-route-id="@category.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        @{
+                                            var children = Model.Where(c => c.ParentCategoryId == category.Id).ToList();
+                                            if (children.Any())
+                                            {
+                                                <div class="category-children ms-4 ps-3 border-start mt-2">
+                                                    <div class="children-container">
+                                                        @foreach (var child in children)
+                                                        {
+                                                            <div class="category-node mb-2 ms-3">
+                                                                <div class="category-item d-flex justify-content-between align-items-center p-3 bg-light rounded-3 shadow-sm">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div class="category-icon me-3">
+                                                                            <i class="bi bi-folder-fill text-primary" style="font-size: 1.2rem;"></i>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="d-flex align-items-center gap-2">
+                                                                                <h6 class="mb-0">@child.Name</h6>
+                                                                                <span class="badge bg-secondary">@child.Code</span>
+                                                                                @if (child.IsActive)
+                                                                                {
+                                                                                    <span class="badge bg-success">Active</span>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span class="badge bg-danger">Inactive</span>
+                                                                                }
+                                                                            </div>
+                                                                            <div class="text-muted small mt-1">
+                                                                                <i class="bi bi-files"></i> Products: @child.ProductCount
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="category-actions">
+                                                                        <a asp-action="GetCategoryDetails" asp-route-id="@child.Id" class="btn btn-sm btn-outline-info me-1" title="View Details">
+                                                                            <i class="bi bi-eye"></i>
+                                                                        </a>
+                                                                        <a asp-action="ShowEditCategoryForm" asp-route-id="@child.Id" class="btn btn-sm btn-outline-warning me-1" title="Edit">
+                                                                            <i class="bi bi-pencil"></i>
+                                                                        </a>
+                                                                        <a asp-action="ConfirmDeleteCategory" asp-route-id="@child.Id" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                                            <i class="bi bi-trash"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+
+                                                                @{
+                                                                    var grandchildren = Model.Where(c => c.ParentCategoryId == child.Id).ToList();
+                                                                    if (grandchildren.Any())
+                                                                    {
+                                                                        <div class="category-children ms-4 ps-3 border-start mt-2">
+                                                                            <div class="children-container">
+                                                                                @foreach (var grandchild in grandchildren)
+                                                                                {
+                                                                                    <div class="category-node mb-2 ms-3">
+                                                                                        <div class="category-item d-flex justify-content-between align-items-center p-2 bg-light rounded-3 shadow-sm">
+                                                                                            <div class="d-flex align-items-center">
+                                                                                                <div class="category-icon me-3">
+                                                                                                    <i class="bi bi-folder-fill text-secondary" style="font-size: 1rem;"></i>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <div class="d-flex align-items-center gap-2">
+                                                                                                        <small class="fw-bold">@grandchild.Name</small>
+                                                                                                        <span class="badge bg-secondary">@grandchild.Code</span>
+                                                                                                        @if (grandchild.IsActive)
+                                                                                                        {
+                                                                                                            <span class="badge bg-success">Active</span>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="category-actions">
+                                                                                                <a asp-action="ShowEditCategoryForm" asp-route-id="@grandchild.Id" class="btn btn-sm btn-outline-warning" title="Edit">
+                                                                                                    <i class="bi bi-pencil"></i>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-folder" style="font-size: 4rem; color: #6c757d;"></i>
+                            <h4 class="mt-3">No Categories Found</h4>
+                            <p class="text-muted">Get started by creating your first category.</p>
+                            <a asp-action="ShowCreateCategoryForm" class="btn btn-primary mt-2">
+                                <i class="bi bi-plus-circle"></i> Create First Category
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .category-tree {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .category-node {
+        transition: all 0.3s ease;
+    }
+
+    .category-item {
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+        .category-item:hover {
+            background-color: #e9ecef !important;
+            transform: translateX(5px);
+        }
+
+    .category-children {
+        border-left: 2px solid #dee2e6;
+    }
+
+    .category-icon i {
+        transition: transform 0.2s ease;
+    }
+
+    .category-item:hover .category-icon i {
+        transform: scale(1.1);
+    }
+
+    .category-actions {
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    }
+
+    .category-item:hover .category-actions {
+        opacity: 1;
+    }
+
+    @@keyframes slideIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    .category-node {
+        animation: slideIn 0.3s ease forwards;
+    }
+</style>
+
+<script>
+    // Add expand/collapse functionality
+    document.querySelectorAll('.category-item').forEach(item => {
+        const node = item.closest('.category-node');
+        const children = node.querySelector('.category-children');
+
+        if (children && children.querySelector('.children-container') && children.querySelector('.children-container').children.length > 0) {
+            const icon = item.querySelector('.category-icon i');
+            if (icon) {
+                icon.style.cursor = 'pointer';
+                icon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = children.style.display === 'none';
+                    children.style.display = isHidden ? 'block' : 'none';
+                    if (isHidden) {
+                        icon.classList.remove('bi-folder-fill');
+                        icon.classList.add('bi-folder2-open');
+                    } else {
+                        icon.classList.remove('bi-folder2-open');
+                        icon.classList.add('bi-folder-fill');
+                    }
+                });
+            }
+        }
+    });
+</script>

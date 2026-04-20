@@ -1,0 +1,74 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.CreateBrandDto
+
+@{
+    ViewData["Title"] = "Create Brand";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Create Brand</h2>
+                    <p class="text-muted mt-1">Add a new brand to your catalog</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Brands
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-tag"></i> Brand Information</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProcessCreateBrand" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-semibold">Brand Name *</label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g., Nike, Apple, Samsung" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Brief description of the brand"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LogoUrl" class="form-label fw-semibold">Logo URL</label>
+                            <input asp-for="LogoUrl" class="form-control" placeholder="https://example.com/logo.png" />
+                            <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+                            <div class="form-text">URL to the brand's logo image</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Website" class="form-label fw-semibold">Website</label>
+                            <input asp-for="Website" class="form-control" placeholder="https://www.example.com" />
+                            <span asp-validation-for="Website" class="text-danger small"></span>
+                        </div>
+
+                        <hr />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Create Brand
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

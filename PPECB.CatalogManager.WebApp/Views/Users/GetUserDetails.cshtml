@@ -1,0 +1,107 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.UserDto
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>User Details</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Users
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">@Model.FullName</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Username:</dt>
+                                <dd class="col-sm-7">@Model.Username</dd>
+
+                                <dt class="col-sm-5">Email:</dt>
+                                <dd class="col-sm-7">@Model.Email</dd>
+
+                                <dt class="col-sm-5">First Name:</dt>
+                                <dd class="col-sm-7">@Model.FirstName</dd>
+
+                                <dt class="col-sm-5">Last Name:</dt>
+                                <dd class="col-sm-7">@Model.LastName</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Phone:</dt>
+                                <dd class="col-sm-7">@(Model.PhoneNumber ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Mobile:</dt>
+                                <dd class="col-sm-7">@(Model.MobileNumber ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Department:</dt>
+                                <dd class="col-sm-7">@(Model.Department ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Job Title:</dt>
+                                <dd class="col-sm-7">@(Model.JobTitle ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Status:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </dd>
+                                <dt class="col-sm-5">Locked:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.IsLockedOut)
+                                    {
+                                        <span class="badge bg-warning">Locked</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Unlocked</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Email Confirmed:</dt>
+                                <dd class="col-sm-7">@(Model.IsEmailConfirmed ? "Yes" : "No")</dd>
+                                <dt class="col-sm-5">Last Login:</dt>
+                                <dd class="col-sm-7">@(Model.LastLoginDate?.ToString("yyyy-MM-dd HH:mm") ?? "Never")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="ShowEditUserForm" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

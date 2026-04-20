@@ -1,0 +1,264 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <!-- Authenticated User View -->
+    <div class="container-fluid px-4">
+        <!-- Welcome Banner -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-light border shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-person-circle fs-4 me-2 text-primary"></i>
+                            <strong>Welcome back, @User.Identity.Name!</strong>
+                        </div>
+                        <div class="text-muted small">
+                            <i class="bi bi-calendar3"></i> @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                            <i class="bi bi-clock ms-2"></i> @DateTime.Now.ToString("HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="h2 mb-2">Dashboard</h1>
+                <p class="text-muted">Overview of your catalog management system</p>
+                <hr />
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Total Products</h6>
+                                <h2 class="mb-0">@ViewBag.TotalProducts</h2>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 rounded p-3">
+                                <i class="bi bi-box-seam fs-4 text-primary"></i>
+                            </div>
+                        </div>
+                        <a asp-controller="Products" asp-action="Index" class="small text-decoration-none mt-3 d-inline-block">View all products →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Categories</h6>
+                                <h2 class="mb-0">@ViewBag.TotalCategories</h2>
+                            </div>
+                            <div class="bg-success bg-opacity-10 rounded p-3">
+                                <i class="bi bi-folder fs-4 text-success"></i>
+                            </div>
+                        </div>
+                        <a asp-controller="Categories" asp-action="Index" class="small text-decoration-none mt-3 d-inline-block">View all categories →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Suppliers</h6>
+                                <h2 class="mb-0">@ViewBag.TotalSuppliers</h2>
+                            </div>
+                            <div class="bg-info bg-opacity-10 rounded p-3">
+                                <i class="bi bi-truck fs-4 text-info"></i>
+                            </div>
+                        </div>
+                        <a asp-controller="Suppliers" asp-action="Index" class="small text-decoration-none mt-3 d-inline-block">View all suppliers →</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">Inventory Value</h6>
+                                <h2 class="mb-0">@ViewBag.TotalInventoryValue.ToString("N0")</h2>
+                                <small class="text-muted">ZAR</small>
+                            </div>
+                            <div class="bg-warning bg-opacity-10 rounded p-3">
+                                <i class="bi bi-currency-dollar fs-4 text-warning"></i>
+                            </div>
+                        </div>
+                        <a asp-controller="InventoryTransactions" asp-action="Index" class="small text-decoration-none mt-3 d-inline-block">View transactions →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        @if (ViewBag.LowStockCount > 0)
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-warning border-0 shadow-sm">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                            <div>
+                                <strong>Low Stock Alert!</strong> You have @ViewBag.LowStockCount product(s) with stock levels below threshold.
+                                <a asp-controller="Products" asp-action="GetLowStockProducts" class="alert-link ms-2">View low stock products</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Quick Actions & Activity -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pt-3 pb-0">
+                        <h5 class="mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a asp-controller="Products" asp-action="ShowCreateProductForm" class="btn btn-outline-primary w-100 text-start py-2">
+                                    <i class="bi bi-plus-circle me-2"></i> Add Product
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a asp-controller="Categories" asp-action="ShowCreateCategoryForm" class="btn btn-outline-success w-100 text-start py-2">
+                                    <i class="bi bi-plus-circle me-2"></i> Add Category
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a asp-controller="InventoryTransactions" asp-action="ShowAddStockForm" class="btn btn-outline-info w-100 text-start py-2">
+                                    <i class="bi bi-arrow-up-circle me-2"></i> Add Stock
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a asp-controller="Suppliers" asp-action="ShowCreateSupplierForm" class="btn btn-outline-secondary w-100 text-start py-2">
+                                    <i class="bi bi-truck me-2"></i> Add Supplier
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 pt-3 pb-0">
+                        <h5 class="mb-0">System Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center py-1">
+                                <span class="text-muted">System Status</span>
+                                <span class="badge bg-success">Operational</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center py-1">
+                                <span class="text-muted">Database Connection</span>
+                                <span class="badge bg-success">Connected</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center py-1">
+                                <span class="text-muted">Last Login</span>
+                                <span class="small">@DateTime.Now.ToString("yyyy-MM-dd HH:mm")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Non-Authenticated / Guest View -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Hero Section -->
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-box-seam display-1 text-primary"></i>
+                    </div>
+                    <h1 class="display-4 fw-bold mb-3">PPECB Catalog Manager</h1>
+                    <p class="lead text-muted mb-4">Complete Product Lifecycle Management Solution</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-controller="Account" asp-action="ShowLoginForm" class="btn btn-primary btn-lg px-4">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                        </a>
+                        <a asp-controller="Account" asp-action="ShowRegisterForm" class="btn btn-outline-success btn-lg px-4">
+                            <i class="bi bi-person-plus me-2"></i> Register
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="row g-4 mt-4">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <i class="bi bi-grid fs-2 text-primary"></i>
+                                </div>
+                                <h5 class="card-title">Product Management</h5>
+                                <p class="card-text text-muted">Manage products with unique codes, pricing, images, and detailed specifications. Support for variants and attributes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <i class="bi bi-folder fs-2 text-success"></i>
+                                </div>
+                                <h5 class="card-title">Category Hierarchy</h5>
+                                <p class="card-text text-muted">Organize products with nested categories, custom ordering, and SEO-friendly URLs.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <i class="bi bi-box fs-2 text-info"></i>
+                                </div>
+                                <h5 class="card-title">Inventory Tracking</h5>
+                                <p class="card-text text-muted">Track stock levels, movements, transfers between warehouses, and stock adjustments.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <i class="bi bi-file-text fs-2 text-warning"></i>
+                                </div>
+                                <h5 class="card-title">Audit Logs</h5>
+                                <p class="card-text text-muted">Complete history of all actions performed in the system with user tracking.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="text-center mt-5">
+                    <p class="text-muted small">
+                        <i class="bi bi-shield-check"></i> Secure authentication |
+                        <i class="bi bi-database"></i> Real-time data |
+                        <i class="bi bi-graph-up"></i> Analytics ready
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

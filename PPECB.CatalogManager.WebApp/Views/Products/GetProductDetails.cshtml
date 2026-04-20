@@ -1,0 +1,61 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.ProductDto
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Product Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Code:</dt>
+                        <dd class="col-sm-8">@Model.Code</dd>
+
+                        <dt class="col-sm-4">Name:</dt>
+                        <dd class="col-sm-8">@Model.Name</dd>
+
+                        <dt class="col-sm-4">Description:</dt>
+                        <dd class="col-sm-8">@Model.Description</dd>
+
+                        <dt class="col-sm-4">Category:</dt>
+                        <dd class="col-sm-8">@Model.CategoryName</dd>
+
+                        <dt class="col-sm-4">Price:</dt>
+                        <dd class="col-sm-8">@Model.SellingPrice.ToString("C")</dd>
+
+                        <dt class="col-sm-4">Stock Quantity:</dt>
+                        <dd class="col-sm-8">@Model.StockQuantity</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8">@Model.Status</dd>
+
+                        <dt class="col-sm-4">Published:</dt>
+                        <dd class="col-sm-8">@(Model.IsPublished ? "Yes" : "No")</dd>
+
+                        <dt class="col-sm-4">Featured:</dt>
+                        <dd class="col-sm-8">@(Model.IsFeatured ? "Yes" : "No")</dd>
+
+                        <dt class="col-sm-4">Created At:</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">Created By:</dt>
+                        <dd class="col-sm-8">@Model.CreatedBy</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <a asp-action="ShowEditProductForm" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <a asp-action="ConfirmDeleteProduct" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>

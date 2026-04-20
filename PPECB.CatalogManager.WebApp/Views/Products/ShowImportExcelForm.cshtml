@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "Import Products from Excel";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Import Products from Excel</h2>
+                    <p class="text-muted mt-1">Bulk upload products using an Excel file</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Products
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Warning"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-file-excel"></i> Upload Excel File</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Instructions:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Download the template below for the correct format</li>
+                            <li>Required columns: Product Name, Selling Price</li>
+                            <li>Optional columns: Code, Description, Category, Cost Price, Stock Quantity, Status, etc.</li>
+                            <li>If Product Code exists, the product will be updated</li>
+                            <li>If Product Code is new, a new product will be created</li>
+                            <li>Maximum file size: 10MB</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <a asp-action="ExportToExcel" class="btn btn-success">
+                            <i class="bi bi-download"></i> Download Template
+                        </a>
+                    </div>
+
+                    <form asp-action="ImportFromExcel" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Select Excel File</label>
+                            <input type="file" name="excelFile" class="form-control" accept=".xlsx,.xls" required />
+                            <div class="form-text">Supported formats: .xlsx, .xls (Max 10MB)</div>
+                        </div>
+
+                        <hr />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Upload and Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4 shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Excel Format Guide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Header Name</th>
+                                    <th>Required</th>
+                                    <th>Example</th>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>Product Code</td><td>No</td><td>PRD001</td></tr>
+                                <tr><td>2</td><td>Product Name</td><td>Yes</td><td>Laptop Computer</td></tr>
+                                <tr><td>3</td><td>Description</td><td>No</td><td>High-performance laptop</td></tr>
+                                <tr><td>4</td><td>Category</td><td>No</td><td>Electronics</td></tr>
+                                <tr><td>5</td><td>Selling Price</td><td>Yes</td><td>999.99</td></tr>
+                                <tr><td>6</td><td>Cost Price</td><td>No</td><td>750.00</td></tr>
+                                <tr><td>7</td><td>Stock Quantity</td><td>No</td><td>100</td></tr>
+                                <tr><td>8</td><td>Reorder Level</td><td>No</td><td>10</td></tr>
+                                <tr><td>9</td><td>Status</td><td>No</td><td>Active</td></tr>
+                                <tr><td>10</td><td>Published</td><td>No</td><td>Yes</td></tr>
+                                <tr><td>11</td><td>Featured</td><td>No</td><td>No</td></tr>
+                                <tr><td>12</td><td>Unit of Measure</td><td>No</td><td>pcs</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

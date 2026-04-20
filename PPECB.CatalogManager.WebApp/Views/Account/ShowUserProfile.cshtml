@@ -1,0 +1,120 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.UserDto
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 pt-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">My Profile</h3>
+                        <a asp-action="ShowChangePasswordForm" class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-key"></i> Change Password
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Username:</dt>
+                                <dd class="col-sm-7">@Model.Username</dd>
+
+                                <dt class="col-sm-5">Email:</dt>
+                                <dd class="col-sm-7">@Model.Email</dd>
+
+                                <dt class="col-sm-5">First Name:</dt>
+                                <dd class="col-sm-7">@Model.FirstName</dd>
+
+                                <dt class="col-sm-5">Last Name:</dt>
+                                <dd class="col-sm-7">@Model.LastName</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Phone:</dt>
+                                <dd class="col-sm-7">@(Model.PhoneNumber ?? "Not provided")</dd>
+
+                                <dt class="col-sm-5">Mobile:</dt>
+                                <dd class="col-sm-7">@(Model.MobileNumber ?? "Not provided")</dd>
+
+                                <dt class="col-sm-5">Department:</dt>
+                                <dd class="col-sm-7">@(Model.Department ?? "Not specified")</dd>
+
+                                <dt class="col-sm-5">Job Title:</dt>
+                                <dd class="col-sm-7">@(Model.JobTitle ?? "Not specified")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <form asp-action="ProcessUpdateProfile" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label">First Name</label>
+                                <input asp-for="FirstName" class="form-control" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label">Last Name</label>
+                                <input asp-for="LastName" class="form-control" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                                <input asp-for="PhoneNumber" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MobileNumber" class="form-label">Mobile Number</label>
+                                <input asp-for="MobileNumber" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Department" class="form-label">Department</label>
+                                <input asp-for="Department" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="JobTitle" class="form-label">Job Title</label>
+                                <input asp-for="JobTitle" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Bio" class="form-label">Bio</label>
+                            <textarea asp-for="Bio" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

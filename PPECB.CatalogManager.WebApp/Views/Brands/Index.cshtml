@@ -1,0 +1,144 @@
+﻿@model IEnumerable<PPECB.CatalogManager.Core.DTOs.BrandDto>
+
+@{
+    ViewData["Title"] = "Brands";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Brands</h2>
+                    <p class="text-muted mt-1">Manage your product brands</p>
+                </div>
+                <a asp-action="ShowCreateBrandForm" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Brand
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="mb-3">
+                <form asp-action="SearchBrands" method="get" class="row g-2">
+                    <div class="col-md-8">
+                        <input type="text" name="searchTerm" class="form-control" placeholder="Search by brand name or description..." value="@ViewBag.SearchTerm" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <a asp-action="Index" class="btn btn-secondary w-100">
+                            <i class="bi bi-arrow-repeat"></i> Reset
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Website</th>
+                            <th>Products</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>@item.Name</strong></td>
+                                    <td>@(item.Description ?? "N/A")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.Website))
+                                        {
+                                            <a href="@item.Website" target="_blank">@item.Website</a>
+                                        }
+                                        else
+                                        {
+                                            <span>N/A</span>
+                                        }
+                                    </td>
+                                    <td><span class="badge bg-info">@(item.ProductCount ?? 0) products</span></td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="GetBrandDetails" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="ShowEditBrandForm" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="ConfirmDeleteBrand" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="toggleStatus(@item.Id)" title="Toggle Status">
+                                            <i class="bi bi-power"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <i class="bi bi-tag" style="font-size: 3rem;"></i>
+                                    <p class="mt-2">No brands found</p>
+                                    <a asp-action="ShowCreateBrandForm" class="btn btn-primary btn-sm">Add your first brand</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleStatus(id) {
+        if (confirm('Are you sure you want to toggle this brand\'s status?')) {
+            fetch(`/Brands/ToggleBrandStatus/${id}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                });
+        }
+    }
+</script>

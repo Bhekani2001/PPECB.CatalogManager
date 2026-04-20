@@ -1,0 +1,139 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.InventoryTransactionDto
+
+@{
+    ViewData["Title"] = "Transaction Details";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Transaction Details</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header">
+                    @if (Model.Type == TransactionType.Receipt)
+                    {
+                        <h4 class="mb-0 text-success">Stock Receipt</h4>
+                    }
+                    else if (Model.Type == TransactionType.Issue)
+                    {
+                        <h4 class="mb-0 text-danger">Stock Issue</h4>
+                    }
+                    else if (Model.Type == TransactionType.Transfer)
+                    {
+                        <h4 class="mb-0 text-info">Stock Transfer</h4>
+                    }
+                    else
+                    {
+                        <h4 class="mb-0 text-warning">Stock Adjustment</h4>
+                    }
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Transaction ID:</dt>
+                                <dd class="col-sm-7">#@Model.Id</dd>
+
+                                <dt class="col-sm-5">Date & Time:</dt>
+                                <dd class="col-sm-7">@Model.TransactionDate.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+
+                                <dt class="col-sm-5">Product:</dt>
+                                <dd class="col-sm-7">@Model.ProductName</dd>
+
+                                <dt class="col-sm-5">Product Code:</dt>
+                                <dd class="col-sm-7">@Model.ProductCode</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Type:</dt>
+                                <dd class="col-sm-7">@Model.TransactionTypeName</dd>
+
+                                <dt class="col-sm-5">Quantity:</dt>
+                                <dd class="col-sm-7">
+                                    @if (Model.Type == TransactionType.Receipt || Model.Type == TransactionType.Transfer)
+                                    {
+                                        <span class="text-success">+@Model.Quantity</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">-@Model.Quantity</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5">Warehouse:</dt>
+                                <dd class="col-sm-7">@(Model.WarehouseName ?? "N/A")</dd>
+
+                                <dt class="col-sm-5">Reference:</dt>
+                                <dd class="col-sm-7">@Model.ReferenceNumber</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Stock Change</h6>
+                            <dl class="row">
+                                <dt class="col-sm-6">Previous Stock:</dt>
+                                <dd class="col-sm-6">@Model.PreviousStock</dd>
+
+                                <dt class="col-sm-6">New Stock:</dt>
+                                <dd class="col-sm-6">@Model.NewStock</dd>
+
+                                <dt class="col-sm-6">Net Change:</dt>
+                                <dd class="col-sm-6">
+                                    @{
+                                        var change = (Model.NewStock ?? 0) - (Model.PreviousStock ?? 0);
+                                        if (change > 0)
+                                        {
+                                            <span class="text-success">+@change</span>
+                                        }
+                                        else if (change < 0)
+                                        {
+                                            <span class="text-danger">@change</span>
+                                        }
+                                        else
+                                        {
+                                            <span>0</span>
+                                        }
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Additional Information</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5">Performed By:</dt>
+                                <dd class="col-sm-7">@Model.PerformedByUserName</dd>
+
+                                <dt class="col-sm-5">Notes:</dt>
+                                <dd class="col-sm-7">@(Model.Notes ?? "No notes")</dd>
+
+                                <dt class="col-sm-5">Created At:</dt>
+                                <dd class="col-sm-7">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Index" class="btn btn-secondary">Back to Transactions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using PPECB.CatalogManager.Core.Entities@using PPECB.CatalogManager.Core.Enums

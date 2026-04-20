@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Adjust Stock";
+    var products = ViewBag.Products as IEnumerable<PPECB.CatalogManager.Core.DTOs.ProductDto>;
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Adjust Stock</h2>
+                    <p class="text-muted mt-1">Manually correct inventory levels</p>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Transactions
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning">
+                    <h4 class="mb-0"><i class="bi bi-sliders2"></i> Adjust Stock</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProcessAdjustStock" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Product *</label>
+                            <select name="productId" id="productId" class="form-select" required>
+                                <option value="">-- Select Product --</option>
+                                @if (products != null)
+                                {
+                                    foreach (var product in products)
+                                    {
+                                        <option value="@product.Id" data-stock="@product.StockQuantity">@product.Code - @product.Name (Current: @product.StockQuantity)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Current Stock</label>
+                            <input type="text" id="currentStock" class="form-control" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">New Stock Quantity *</label>
+                            <input type="number" name="newQuantity" id="newQuantity" class="form-control" min="0" required />
+                            <div id="adjustmentInfo" class="small mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reason for Adjustment *</label>
+                            <textarea name="reason" class="form-control" rows="3" placeholder="e.g., Stock count correction, Damaged goods, Returns, etc." required></textarea>
+                        </div>
+
+                        <hr />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> Adjust Stock
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('productId').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        var stock = selectedOption.getAttribute('data-stock');
+        document.getElementById('currentStock').value = stock || 0;
+    });
+
+    document.getElementById('newQuantity').addEventListener('input', function() {
+        var currentStock = parseInt(document.getElementById('currentStock').value) || 0;
+        var newQuantity = parseInt(this.value) || 0;
+        var difference = newQuantity - currentStock;
+        var info = document.getElementById('adjustmentInfo');
+
+        if (difference > 0) {
+            info.innerHTML = '<span class="text-success">Will add +' + difference + ' units to stock</span>';
+        } else if (difference < 0) {
+            info.innerHTML = '<span class="text-danger">Will remove ' + Math.abs(difference) + ' units from stock</span>';
+        } else {
+            info.innerHTML = '<span class="text-muted">No change in stock level</span>';
+        }
+    });
+</script>

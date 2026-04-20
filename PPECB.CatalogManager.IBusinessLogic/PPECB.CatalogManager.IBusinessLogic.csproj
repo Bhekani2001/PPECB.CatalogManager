@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PPECB.CatalogManager.Core\PPECB.CatalogManager.Core.csproj" />
+    <ProjectReference Include="..\PPECB.CatalogManager.IRepositories\PPECB.CatalogManager.IRepositories.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

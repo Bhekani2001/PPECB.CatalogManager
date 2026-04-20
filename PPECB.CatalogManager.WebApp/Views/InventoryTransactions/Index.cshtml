@@ -1,0 +1,160 @@
+﻿@model PPECB.CatalogManager.Core.DTOs.PagedResultDto<PPECB.CatalogManager.Core.DTOs.InventoryTransactionDto>
+
+@{
+    ViewData["Title"] = "Inventory Transactions";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">Inventory Transactions</h2>
+                    <p class="text-muted mt-1">Track all stock movements and inventory changes</p>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-plus-circle"></i> New Transaction
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-action="ShowAddStockForm">Add Stock</a></li>
+                        <li><a class="dropdown-item" asp-action="ShowRemoveStockForm">Remove Stock</a></li>
+                        <li><a class="dropdown-item" asp-action="ShowTransferStockForm">Transfer Stock</a></li>
+                        <li><a class="dropdown-item" asp-action="ShowAdjustStockForm">Adjust Stock</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Warehouse</th>
+                            <th>Reference</th>
+                            <th>Performed By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Items.Any())
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>@item.TransactionDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>
+                                        @if (item.Type == TransactionType.Receipt)
+                                        {
+                                            <span class="badge bg-success">Stock In</span>
+                                        }
+                                        else if (item.Type == TransactionType.Issue)
+                                        {
+                                            <span class="badge bg-danger">Stock Out</span>
+                                        }
+                                        else if (item.Type == TransactionType.Transfer)
+                                        {
+                                            <span class="badge bg-info">Transfer</span>
+                                        }
+                                        else if (item.Type == TransactionType.Adjustment)
+                                        {
+                                            <span class="badge bg-warning">Adjustment</span>
+                                        }
+                                    </td>
+                                    <td>@item.ProductName</td>
+                                    <td>
+                                        @if (item.Type == TransactionType.Receipt || item.Type == TransactionType.Transfer)
+                                        {
+                                            <span class="text-success">+@item.Quantity</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">-@item.Quantity</span>
+                                        }
+                                    </td>
+                                    <td>@(item.WarehouseName ?? "N/A")</td>
+                                    <td>@item.ReferenceNumber</td>
+                                    <td>@item.PerformedByUserName</td>
+                                    <td>
+                                        <a asp-action="GetTransactionDetails" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                    <p class="mt-2">No transactions found</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.TotalPages > 1)
+            {
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                        }
+
+                        @for (int i = 1; i <= Model.TotalPages && i <= 10; i++)
+                        {
+                            if (i == Model.PageNumber)
+                            {
+                                <li class="page-item active"><span class="page-link">@i</span></li>
+                            }
+                            else
+                            {
+                                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a></li>
+                            }
+                        }
+
+                        @if (Model.HasNextPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled"><span class="page-link">Next</span></li>
+                        }
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</div>
+
+@using PPECB.CatalogManager.Core.Entities@using PPECB.CatalogManager.Core.Enums

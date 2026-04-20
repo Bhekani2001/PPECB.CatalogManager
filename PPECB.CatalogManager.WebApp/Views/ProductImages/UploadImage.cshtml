@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Upload Product Image";
+    var products = ViewBag.Products as IEnumerable<PPECB.CatalogManager.Core.DTOs.ProductDto>;
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Upload Product Image</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Images
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Upload Image</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ProcessUploadImage" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Product *</label>
+                            <select name="productId" class="form-select" required>
+                                <option value="">-- Select Product --</option>
+                                @if (products != null)
+                                {
+                                    foreach (var product in products)
+                                    {
+                                        <option value="@product.Id">@product.Name (@product.Code)</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Image File *</label>
+                            <input type="file" name="imageFile" class="form-control" accept="image/*" required />
+                            <div class="form-text">Allowed: JPG, JPEG, PNG, GIF, WEBP. Max size: 5MB</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Alt Text</label>
+                            <input type="text" name="altText" class="form-control" placeholder="Description for accessibility" />
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="isPrimary" class="form-check-input" value="true" />
+                            <label class="form-check-label">Set as Primary Image</label>
+                        </div>
+
+                        <hr />
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Upload
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

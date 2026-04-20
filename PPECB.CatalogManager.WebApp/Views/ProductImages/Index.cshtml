@@ -1,0 +1,119 @@
+﻿@model IEnumerable<PPECB.CatalogManager.Core.Entities.ProductImage>
+
+@{
+    ViewData["Title"] = "Product Images";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Product Images</h2>
+                <a asp-action="UploadImage" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Upload New Image
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>Alt Text</th>
+                            <th>Primary</th>
+                            <th>Size</th>
+                            <th>Uploaded</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@(item.Product?.Name ?? "Unknown")</td>
+                                    <td>
+                                        @if (item.ImageData != null)
+                                        {
+                                            <img src="data:@item.ImageMimeType;base64,@Convert.ToBase64String(item.ImageData)" style="width: 50px; height: 50px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <span>No image</span>
+                                        }
+                                    </td>
+                                    <td>@(item.AltText ?? "-")</td>
+                                    <td>
+                                        @if (item.IsPrimary)
+                                        {
+                                            <span class="badge bg-success">Primary</span>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm btn-outline-primary" onclick="setPrimaryImage(@item.Id)">Set as Primary</button>
+                                        }
+                                    </td>
+                                    <td>@(item.FileSize / 1024) KB</td>
+                                    <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                    <td>
+                                        <a asp-action="ViewImage" asp-route-id="@item.Id" class="btn btn-sm btn-info">View</a>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteImage(@item.Id)">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No images found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteImage(id) {
+        if (confirm('Are you sure you want to delete this image?')) {
+            fetch(`/ProductImages/DeleteImage/${id}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) location.reload();
+                });
+        }
+    }
+
+    function setPrimaryImage(id) {
+        fetch(`/ProductImages/SetPrimaryImage/${id}`, { method: 'POST' })
+            .then(response => {
+                if (response.ok) location.reload();
+            });
+    }
+</script>

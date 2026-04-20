@@ -1,0 +1,6 @@
+@PPECB.CatalogManager.WebAPI_HostAddress = http://localhost:5136
+
+GET {{PPECB.CatalogManager.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

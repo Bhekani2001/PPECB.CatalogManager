@@ -1,0 +1,116 @@
+﻿@using PPECB.CatalogManager.Core.Entities
+@using PPECB.CatalogManager.Core.Enums
+@model IEnumerable<PPECB.CatalogManager.Core.DTOs.ProductDto>
+
+@{
+    ViewData["Title"] = "Low Stock Products";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Low Stock Products</h2>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Products
+                </a>
+            </div>
+            <hr />
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                Products with stock level below or equal to 10 units.
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Current Stock</th>
+                            <th>Reorder Level</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>@item.Code</strong></td>
+                                    <td>@item.Name</td>
+                                    <td>@item.CategoryName</td>
+                                    <td>
+                                        @if (item.StockQuantity == 0)
+                                        {
+                                            <span class="badge bg-danger fs-6">@item.StockQuantity</span>
+                                        }
+                                        else if (item.StockQuantity <= 5)
+                                        {
+                                            <span class="badge bg-warning fs-6">@item.StockQuantity</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info fs-6">@item.StockQuantity</span>
+                                        }
+                                    </td>
+                                    <td>@item.ReorderLevel</td>
+                                    <td>
+                                        @if (item.Status == ProductStatus.Active)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else if (item.Status == ProductStatus.Draft)
+                                        {
+                                            <span class="badge bg-secondary">Draft</span>
+                                        }
+                                        else if (item.Status == ProductStatus.Discontinued)
+                                        {
+                                            <span class="badge bg-danger">Discontinued</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info">@item.Status</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="ShowEditProductForm" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a asp-action="ShowAddStockForm" asp-controller="InventoryTransactions" asp-route-productId="@item.Id" class="btn btn-sm btn-success" title="Add Stock">
+                                            <i class="bi bi-plus-circle"></i> Add Stock
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center text-success">
+                                    <i class="bi bi-check-circle fs-4"></i>
+                                    <p class="mt-2">No low stock products found. All stock levels are healthy!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+﻿@model IEnumerable<PPECB.CatalogManager.Core.DTOs.UserDto>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>User Management</h2>
+                <a asp-action="ShowCreateUserForm" class="btn btn-primary">
+                    <i class="bi bi-person-plus"></i> Add New User
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Full Name</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Locked</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Username</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.FullName</td>
+                                    <td>@(item.Department ?? "-")</td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsLockedOut)
+                                        {
+                                            <span class="badge bg-warning">Locked</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info">Active</span>
+                                        }
+                                    </td>
+                                    <td>@(item.LastLoginDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                    <td>
+                                        <a asp-action="GetUserDetails" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="ShowEditUserForm" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="toggleStatus(@item.Id)" title="Toggle Status">
+                                            <i class="bi bi-power"></i>
+                                        </button>
+                                        @if (!item.IsLockedOut)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="lockUser(@item.Id)" title="Lock User">
+                                                <i class="bi bi-lock"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-sm btn-success" onclick="unlockUser(@item.Id)" title="Unlock User">
+                                                <i class="bi bi-unlock"></i>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">No users found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleStatus(id) {
+        if (confirm('Are you sure you want to toggle this user\'s status?')) {
+            fetch(`/Users/ToggleUserStatus/${id}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) location.reload();
+                });
+        }
+    }
+
+    function lockUser(id) {
+        var minutes = prompt('Enter lock duration in minutes:', '30');
+        if (minutes) {
+            fetch(`/Users/LockUser/${id}?minutes=${minutes}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) location.reload();
+                });
+        }
+    }
+
+    function unlockUser(id) {
+        if (confirm('Are you sure you want to unlock this user?')) {
+            fetch(`/Users/UnlockUser/${id}`, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) location.reload();
+                });
+        }
+    }
+</script>
