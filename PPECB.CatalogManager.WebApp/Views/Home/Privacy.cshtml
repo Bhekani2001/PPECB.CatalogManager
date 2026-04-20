@@ -1,6 +1,88 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-5">
+                    <h1 class="display-5 mb-4">Privacy Policy</h1>
+                    <p class="text-muted">Last updated: @DateTime.Now.ToString("MMMM dd, yyyy")</p>
+
+                    <hr />
+
+                    <h3>1. Information We Collect</h3>
+                    <p>The PPECB Catalog Manager collects and processes the following information:</p>
+                    <ul>
+                        <li><strong>Personal Information:</strong> Name, email address, phone number, and job title when you register an account.</li>
+                        <li><strong>Product Data:</strong> Information about products, categories, suppliers, brands, and warehouses you manage.</li>
+                        <li><strong>Inventory Data:</strong> Stock levels, transactions, and movement history.</li>
+                        <li><strong>Usage Data:</strong> Login history, IP addresses, and actions performed within the system.</li>
+                    </ul>
+
+                    <h3>2. How We Use Your Information</h3>
+                    <p>We use the collected information for:</p>
+                    <ul>
+                        <li>Providing and maintaining the Catalog Management System</li>
+                        <li>Authenticating users and managing access control</li>
+                        <li>Tracking inventory and product lifecycle</li>
+                        <li>Auditing system activities for security and compliance</li>
+                        <li>Improving system performance and user experience</li>
+                    </ul>
+
+                    <h3>3. Data Security</h3>
+                    <p>We implement appropriate security measures to protect your information:</p>
+                    <ul>
+                        <li>Passwords are hashed and salted before storage</li>
+                        <li>All data is encrypted in transit using TLS/SSL</li>
+                        <li>Role-based access control restricts unauthorized access</li>
+                        <li>Regular security audits and updates</li>
+                        <li>Secure database with encrypted connections</li>
+                    </ul>
+
+                    <h3>4. Data Retention</h3>
+                    <p>We retain your information for as long as your account is active or as needed to provide services. You may request deletion of your data at any time. Audit logs are retained for 90 days for security purposes.</p>
+
+                    <h3>5. Your Rights</h3>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access your personal information</li>
+                        <li>Correct inaccurate or incomplete information</li>
+                        <li>Request deletion of your data</li>
+                        <li>Export your data in a portable format</li>
+                        <li>Withdraw consent at any time</li>
+                    </ul>
+
+                    <h3>6. Cookies and Tracking</h3>
+                    <p>This application uses authentication cookies to maintain your logged-in session. These cookies are essential for system functionality and do not track you across other websites.</p>
+
+                    <h3>7. Third-Party Services</h3>
+                    <p>This system does not share your data with third-party services. All data is stored locally within the PPECB infrastructure.</p>
+
+                    <h3>8. Children's Privacy</h3>
+                    <p>This service is intended for professional use by authorized PPECB personnel and partners. It does not knowingly collect information from children under 13 years of age.</p>
+
+                    <h3>9. Changes to This Policy</h3>
+                    <p>We may update this Privacy Policy from time to time. Changes will be notified via the application dashboard. Continued use of the system constitutes acceptance of the updated policy.</p>
+
+                    <h3>10. Contact Us</h3>
+                    <p>If you have any questions about this Privacy Policy, please contact:</p>
+                    <address>
+                        <strong>PPECB - Perishable Products Export Control Board</strong><br />
+                        45 Silwerboom Ave, Plattekloof<br />
+                        Cape Town, 7560<br />
+                        Email: <a href="mailto:privacy@ppecb.com">privacy@ppecb.com</a><br />
+                        Phone: +27 21 930 1134
+                    </address>
+
+                    <hr />
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Note:</strong> This system is for authorized use only. All activities are logged and monitored for security purposes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

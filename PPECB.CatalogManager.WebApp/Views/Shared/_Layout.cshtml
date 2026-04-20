@@ -199,7 +199,6 @@
         @if (User.Identity.IsAuthenticated)
         {
             <ul class="sidebar-menu">
-                <!-- Dashboard -->
                 <li>
                     <a class="menu-item" asp-controller="Home" asp-action="Index">
                         <i class="bi bi-speedometer2"></i>
@@ -207,7 +206,6 @@
                     </a>
                 </li>
 
-                <!-- Products Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-grid"></i>
@@ -227,7 +225,6 @@
                     </ul>
                 </li>
 
-                <!-- Categories Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-folder"></i>
@@ -241,7 +238,6 @@
                     </ul>
                 </li>
 
-                <!-- Inventory Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-box"></i>
@@ -257,7 +253,6 @@
                     </ul>
                 </li>
 
-                <!-- Suppliers Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-truck"></i>
@@ -270,7 +265,6 @@
                     </ul>
                 </li>
 
-                <!-- Brands Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-tag"></i>
@@ -283,7 +277,6 @@
                     </ul>
                 </li>
 
-                <!-- Warehouses Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-building"></i>
@@ -296,7 +289,6 @@
                     </ul>
                 </li>
 
-                <!-- Reports Dropdown -->
                 <li>
                     <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                         <i class="bi bi-file-text"></i>
@@ -309,9 +301,8 @@
                     </ul>
                 </li>
 
-                <!-- USER MANAGEMENT DROPDOWN - For Admin only -->
-      @*           @if (User.IsInRole("Admin"))
-                { *@
+               @if (User.IsInRole("Admin"))
+                { 
                     <li>
                         <div class="menu-item has-dropdown" onclick="toggleDropdown(this)">
                             <i class="bi bi-people"></i>
@@ -326,9 +317,9 @@
                             <li><a asp-controller="Roles" asp-action="ShowCreateRoleForm">Create Role</a></li>
                         </ul>
                     </li>
-                @* } *@
+                }
 
-                <!-- User Profile -->
+  
                 <li>
                     <a class="menu-item" asp-controller="Account" asp-action="ShowUserProfile">
                         <i class="bi bi-person-circle"></i>
@@ -336,15 +327,12 @@
                     </a>
                 </li>
 
-                <!-- Change Password -->
                 <li>
                     <a class="menu-item" asp-controller="Account" asp-action="ShowChangePasswordForm">
                         <i class="bi bi-key"></i>
                         <span>Change Password</span>
                     </a>
                 </li>
-
-                <!-- Logout -->
                 <li>
                     <form asp-controller="Account" asp-action="ProcessLogout" method="post" id="logoutForm">
                         <a class="menu-item" href="#" onclick="document.getElementById('logoutForm').submit();">
@@ -383,7 +371,7 @@
 
         <main>@RenderBody()</main>
 
-        <div class="footer">&copy; @DateTime.Now.Year - PPECB Catalog Manager | All Rights Reserved</div>
+        <div class="footer">&copy; @DateTime.Now.Year - PPECB Catalog Manager |Developed by Philani Ngwane | All Rights Reserved</div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

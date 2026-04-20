@@ -24,15 +24,6 @@
             </div>
         </div>
 
-        <!-- Page Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <h1 class="h2 mb-2">Dashboard</h1>
-                <p class="text-muted">Overview of your catalog management system</p>
-                <hr />
-            </div>
-        </div>
-
         <!-- Statistics Cards -->
         <div class="row g-3 mb-4">
             <div class="col-md-3">
@@ -120,7 +111,7 @@
             </div>
         }
 
-        <!-- Quick Actions & Activity -->
+        <!-- Quick Actions -->
         <div class="row g-3">
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm">
@@ -156,7 +147,7 @@
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-0 pt-3 pb-0">
-                        <h5 class="mb-0">System Information</h5>
+                        <h5 class="mb-0">System Status</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-2">
@@ -181,84 +172,6 @@
 }
 else
 {
-    <!-- Non-Authenticated / Guest View -->
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <!-- Hero Section -->
-                <div class="text-center py-5">
-                    <div class="mb-4">
-                        <i class="bi bi-box-seam display-1 text-primary"></i>
-                    </div>
-                    <h1 class="display-4 fw-bold mb-3">PPECB Catalog Manager</h1>
-                    <p class="lead text-muted mb-4">Complete Product Lifecycle Management Solution</p>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a asp-controller="Account" asp-action="ShowLoginForm" class="btn btn-primary btn-lg px-4">
-                            <i class="bi bi-box-arrow-in-right me-2"></i> Login
-                        </a>
-                        <a asp-controller="Account" asp-action="ShowRegisterForm" class="btn btn-outline-success btn-lg px-4">
-                            <i class="bi bi-person-plus me-2"></i> Register
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Features Section -->
-                <div class="row g-4 mt-4">
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <div class="mb-3">
-                                    <i class="bi bi-grid fs-2 text-primary"></i>
-                                </div>
-                                <h5 class="card-title">Product Management</h5>
-                                <p class="card-text text-muted">Manage products with unique codes, pricing, images, and detailed specifications. Support for variants and attributes.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <div class="mb-3">
-                                    <i class="bi bi-folder fs-2 text-success"></i>
-                                </div>
-                                <h5 class="card-title">Category Hierarchy</h5>
-                                <p class="card-text text-muted">Organize products with nested categories, custom ordering, and SEO-friendly URLs.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <div class="mb-3">
-                                    <i class="bi bi-box fs-2 text-info"></i>
-                                </div>
-                                <h5 class="card-title">Inventory Tracking</h5>
-                                <p class="card-text text-muted">Track stock levels, movements, transfers between warehouses, and stock adjustments.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <div class="mb-3">
-                                    <i class="bi bi-file-text fs-2 text-warning"></i>
-                                </div>
-                                <h5 class="card-title">Audit Logs</h5>
-                                <p class="card-text text-muted">Complete history of all actions performed in the system with user tracking.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer Note -->
-                <div class="text-center mt-5">
-                    <p class="text-muted small">
-                        <i class="bi bi-shield-check"></i> Secure authentication |
-                        <i class="bi bi-database"></i> Real-time data |
-                        <i class="bi bi-graph-up"></i> Analytics ready
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Redirect to login if not authenticated -->
+    <script>window.location.href = '/Account/ShowLoginForm';</script>
 }

@@ -7,7 +7,6 @@ using PPECB.CatalogManager.BusinessLogic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -25,7 +24,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configure Entity Framework with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -33,7 +31,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
-// Register Repositories
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -49,7 +46,6 @@ builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 builder.Services.AddScoped<IPurchaseOrderItemRepository, PurchaseOrderItemRepository>();
 builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
-// Register Business Logic
 builder.Services.AddScoped<ICategoryBusinessLogic, CategoryBusinessLogic>();
 builder.Services.AddScoped<IProductBusinessLogic, ProductBusinessLogic>();
 builder.Services.AddScoped<IUserBusinessLogic, UserBusinessLogic>();
@@ -60,12 +56,10 @@ builder.Services.AddScoped<IWarehouseBusinessLogic, WarehouseBusinessLogic>();
 builder.Services.AddScoped<IInventoryTransactionBusinessLogic, InventoryTransactionBusinessLogic>();
 builder.Services.AddScoped<IProductImageBusinessLogic, ProductImageBusinessLogic>();
 
-// Register AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
